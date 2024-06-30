@@ -1,3 +1,5 @@
+# https://github.com/Mozilla-Ocho/llamafile/blob/main/Makefile
+
 cmake_minimum_required(VERSION 3.5)
 project(IsDigits)
 
@@ -5,56 +7,12 @@ project(IsDigits)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
-set(COSMO_ROOT "/home/raphy/cosmocc/bin")
-
-#find_program(CMAKE_C_COMPILER NAMES "${COSMO_ROOT}/tool/scripts/cosmocc")
-#find_program(CMAKE_CXX_COMPILER NAMES "${COSMO_ROOT}/tool/scripts/cosmoc++")
-#find_program(CMAKE_OBJCOPY NAMES objcopy)
-
-find_program(CMAKE_C_COMPILER NAMES "${COSMO_ROOT}/bin/cosmocc")
-find_program(CMAKE_CXX_COMPILER NAMES "${COSMO_ROOT}/bin/cosmoc++")
-find_program(CMAKE_OBJCOPY NAMES objcopy)
-
-if(NOT COSMO_ROOT)
-    message(FATAL_ERROR "COSMO environment variable not set")
-endif()
-
+set(CMAKE_C_COMPILER cosmocc)
+set(CMAKE_CXX_COMPILER cosmoc++)
+set(CMAKE_CXX_FLAG exceptions)
+set(CMAKE_AR $(command -v cosmoar))
 
 add_executable(${PROJECT_NAME}
 
     src/isdigits.cpp
 )
-
-
-
-if(NOT _cosmopolitan_add_executable_defined)
-    set(_cosmopolitan_add_executable_defined 1)
-    define_property(TARGET
-        PROPERTY COSMOPOLITAN_DEBUG_SUFFIX
-        BRIEF_DOCS "Cosmopolitan suffix"
-        FULL_DOCS "Cosmopolitan suffix"
-    )
-
-    set(COSMOPOLITAN_DEBUG_SUFFIX_DEFAULT ".dbg")
-
-    function(add_executable TARGET)
-        _add_executable(${TARGET} ${ARGN})
-        set_propertY(TARGET ${TARGET} PROPERTY SUFFIX ".com")
-        set_propertY(TARGET ${TARGET} PROPERTY COSMOPOLITAN_DEBUG_SUFFIX "${COSMOPOLITAN_DEBUG_SUFFIX_DEFAULT}")
-        get_property(_target_type TARGET ${TARGET} PROPERTY TYPE)
-        get_property(_target_imported TARGET ${TARGET} PROPERTY IMPORTED)
-        if(_target_type STREQUAL "EXECUTABLE" AND NOT _target_imported)
-            set(cosmo_directory "$<TARGET_FILE_DIR:${TARGET}>")
-            set(cosmo_nodebug_file_name "$<TARGET_FILE_NAME:${TARGET}>")
-            set(cosmo_debug_file_name "${cosmo_nodebug_file_name}$<TARGET_PROPERTY:${TARGET},COSMOPOLITAN_DEBUG_SUFFIX>")
-
-            set(outfilename "${cosmo_directory}/${cosmo_prefix}${name_out}${cosmo_suffix}")
-            add_custom_command(TARGET "${TARGET}" POST_BUILD
-                COMMAND "${CMAKE_COMMAND}" ARGS -E rename "${cosmo_nodebug_file_name}" "${cosmo_debug_file_name}"
-                COMMAND "${CMAKE_OBJCOPY}" ARGS -S -O binary "${cosmo_debug_file_name}" "${cosmo_nodebug_file_name}"
-            )
-            set_property(TARGET ${TARGET} APPEND PROPERTY ADDITIONAL_CLEAN_FILES "${cosmo_debug_file_name}")
-        endif()
-    endfunction()
-endif()

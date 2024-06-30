@@ -1,3 +1,5 @@
+# https://github.com/Mozilla-Ocho/llamafile/blob/main/Makefile
+
 cmake_minimum_required(VERSION 3.5)
 project(IsDigits)
 
@@ -14,10 +16,3 @@ add_executable(${PROJECT_NAME}
 
     src/isdigits.cpp
 )
-
-#add_custom_command(
-    #./package.sh "builddir" "linux" "ubuntu"
-#)
-
-
-#cmake .. -DCMAKE_C_COMPILER=cosmocc -DCMAKE_CXX_COMPILER=cosmoc++ -DCMAKE_CXX_FLAGS=-fexceptions -DCMAKE_AR=$(command -v cosmoar)
